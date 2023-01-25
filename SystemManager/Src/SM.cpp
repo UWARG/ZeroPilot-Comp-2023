@@ -15,8 +15,6 @@
 
 namespace SM {
 
-uint32_t AM_PERIOD_MS = 5;  // Current operation speed of 200 Hz.
-
 /*
 Helper Functions
 */
@@ -75,66 +73,5 @@ void SystemManager::execute()
 { 
     currentState->execute(this); 
 }
-
-void SystemManager::AMOperationTask(void* pvParameters) 
-{
-    AM::AttitudeManager* attitude_manager = (AM::AttitudeManager*)pvParameters;
-
-    const AM::AttitudeManagerInput* am_instructions;
-    osStatus_t sm_am_queue_status;
-
-    TickType_t xNextWakeTime;
-    xNextWakeTime = xTaskGetTickCount();
-    while (true) {
-        // Read MessageQ from SM
-        uint8_t* msg_priority = 0;
-
-        // Arbitrary 3ms timeout as no message is no problem, gives AM time to run
-        sm_am_queue_status = osMessageQueueGet(attitude_manager->getSmQueue(), &am_instructions, msg_priority, 3);
-
-        // Clear MessageQ from SM
-        osMessageQueueReset(attitude_manager->getSmQueue());
-
-        // if (sm_am_queue_status != osOK) {
-        //     // Set a flag for the message to AM once AM has use of it
-        // }
-
-        // Run AM control loop
-        attitude_manager->runControlLoopIteration(*am_instructions);
-
-        // Delay to operate at set frequency
-        vTaskDelayUntil(&xNextWakeTime, SM::AM_PERIOD_MS);
-    }
-}
-
-// void SystemManager::TMOperationTask(void *pvParameters)
-// {
-//     TickType_t xNextWakeTime;
-//     xNextWakeTime = xTaskGetTickCount();
-//     while (true) {
-//         TM_instance.execute();
-//         vTaskDelayUntil(&xNextWakeTime, SM::TM_PERIOD_OPERATION_MS);
-//     }
-// }
-
-// void SystemManager::TMSlowTask(void *pvParameters)
-// {
-//     TickType_t xNextWakeTime;
-//     xNextWakeTime = xTaskGetTickCount();
-//     while (true) {
-//         TM_instance.execute();
-//         vTaskDelayUntil(&xNextWakeTime, SM::TM_PERIOD_SLOW_MS);
-//     }
-// }
-
-// void SystemManager::PMOperationTask(void *pvParameters)
-// {
-//     TickType_t xNextWakeTime;
-//     xNextWakeTime = xTaskGetTickCount();
-//     while (true) {
-//         PM_instance.execute();
-//         vTaskDelayUntil(&xNextWakeTime, SM::PM_PERIOD_MS);
-//     }
-// }
 
 }  // namespace SM

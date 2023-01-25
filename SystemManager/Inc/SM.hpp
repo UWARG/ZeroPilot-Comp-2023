@@ -46,10 +46,6 @@ enum RC_Controller_Channel {
     RC_ARM_CHANNEL
 };  // Either reconfigure controller or this to match
 
-// int PM_PERIOD_MS = 5; // 200Hz.
-// int TM_PERIOD_SLOW_MS = 20; // 50Hz. All of these numbers should be decided.
-// int TM_PERIOD_OPERATION_MS = 5;
-
 /*
 Helper Functions
 */
@@ -68,25 +64,6 @@ class SystemManager {
         void execute();
         void setState(SystemState& newState);
         Drone_Operation_Mode getMode();
-        
-        // Task Handles
-        TaskHandle_t AM_handle = NULL;
-        // TaskHandle_t PM_handle = NULL;
-        // TaskHandle_t TM_handle = NULL;
-
-        // Thread tasks here
-        static void AMOperationTask(void *pvParameters);
-        // static void PMOperationTask();
-        // static void TMOperationTask();
-        // static void TMSlowTask();
-
-        // Mail Queues here
-        // osMessageQId TM_to_SM_queue;
-        // osMessageQId SM_to_TM_queue;
-        // osMessageQId SM_to_PM_queue;
-        // osMessageQId PM_to_AM_queue;
-        osMessageQId SM_to_AM_queue;
-        // osMessageQId AM_to_SM_queue;
 
         // TODO Bulk message from telemetry stored here
 
@@ -96,16 +73,6 @@ class SystemManager {
 
         // Data from SF
         // LosSFData sf_data;
-
-        // Message sent to AM
-        // AM::AttitudeManagerInput to_am_data;
-        
-        // TODO Response from AM stored here to be merged and sent to Telemetry
-
-        // AM init, might work better in a config file later
-        AM::ActuatorConfig engine, left_aileron, right_aileron, rudder, elevator;
-        AM::FixedControl fixed_control;
-        AM::AttitudeManager attitude_manager;
 
     private:
         SystemState* currentState;
