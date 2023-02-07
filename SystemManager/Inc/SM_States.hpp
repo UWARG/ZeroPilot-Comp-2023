@@ -18,7 +18,6 @@
 #define ZPSW3_SM_STATES_HPP
 
 #include "SM_StateManager.hpp"
-#include "AM_DataTypes.hpp"
 #include "cmsis_os.h"
 
 namespace SM {
@@ -73,9 +72,6 @@ class FlightMode : public SystemState {
         }
         FlightMode(const FlightMode &other);
         FlightMode& operator =(const FlightMode &other);
-
-        // static AttitudeManagerInput* getManualWaypoint();
-        // static CommandsFromSM* generatePmPacket();
 };
 
 class FatalFailureMode : public SystemState {
